@@ -3,6 +3,8 @@
 Hooked is a web application that lets users share their reading preferences and discover books they’ll love.  
 Users can select favorite genres, list top 3 favorite books, and browse recommendations tailored to their tastes.
 
+Edits from the repo we originally made it on: https://github.com/carolxu2006/Ignition-Hacks-Real/
+
 ---
 
 ## 🚀 Features
