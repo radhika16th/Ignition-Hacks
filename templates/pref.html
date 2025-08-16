@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <!-- Meta + Title -->
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Hooked</title>
+        <link rel="shortcut icon" type="image/x-icon" href="hookIcon.ico" />
+        <style>
+            /* ---------- Theme Variables ---------- */
+            :root{
+                --bg:#3D0037;
+                --card:#500243;
+                --pale:#FFEBFD;
+                --text:#fff;
+                --hover-purple:#4b0239;
+            }
+
+            /* ---------- Base Styles ---------- */
+            body { 
+                margin:0; 
+                font-family:"Times New Roman", Times, serif; 
+                background:var(--bg); 
+                color:var(--text); 
+            }
+
+            .container { 
+                max-width:900px; 
+                margin:0 auto; 
+                padding:20px; 
+            }
+
+            header{ 
+                display:flex; 
+                align-items:center; 
+                gap:12px; 
+            }
+
+            .logo{ 
+                width:50px; 
+                height:auto; 
+            }
+
+            .site-name{ 
+                font-size:2rem; 
+                font-weight:bold; 
+            }
+
+            /* ---------- Card Layout ---------- */
+            .card{ 
+                background:var(--card); 
+                padding:20px; 
+                border-radius:8px; 
+                margin-top:30px; 
+            }
+
+            /* ---------- Genre Pills ---------- */
+            .genres{ 
+                display:flex; 
+                flex-wrap:wrap; 
+                gap:10px; 
+            }
+
+            .pill{ 
+                display:inline-flex; 
+                align-items:center; 
+                border-radius:999px; 
+                border:1px solid #7e547e; 
+                cursor:pointer; 
+            }
+
+            .pill input{ 
+                display:none;  /* hide default checkbox */
+            }
+
+            .pill span{ 
+                padding:6px 12px; 
+                background:#eee; 
+                color:#000; 
+                border-radius:999px; 
+            }
+
+            /* Highlight selected pill */
+            .pill input:checked + span {
+                background: var(--hover-purple);
+                color:#fff;
+                box-shadow: 0 0 0 2px rgba(255,235,253,.45);
+            }
+
+            /* ---------- Book Inputs Grid ---------- */
+            .grid{ 
+                display:grid; 
+                gap:20px; 
+            }
+
+            @media (min-width:600px){ 
+                .grid{ 
+                    grid-template-columns:repeat(3,1fr); 
+                } 
+            }
+            .grid input[type="text"]{
+                width:80%;
+                padding:10px;
+                margin-bottom:10px;
+                border:1px solid #ccc;
+                border-radius:6px;
+                color:#000;
+                box-sizing:border-box;
+            }
+
+            /* ---------- Actions + Submit Button ---------- */
+            .actions{
+            text-align: right;
+            margin-top: 16px;
+            }
+
+            .btn{
+            padding: 10px 18px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-family: "Times New Roman", Times, serif;
+            background: var(--pale);
+            color: var(--card);
+            font-weight: 700;
+            box-shadow: 0 6px 14px rgba(0,0,0,.25);
+            transition: transform .05s ease, background .2s ease, color .2s ease;
+            }
+
+            .btn:hover{
+            background: var(--hover-purple) !important;  
+            color: #fff !important;  
+            }
+
+            .btn:active{
+            transform: translateY(1px);
+            }
+
+            /* ---------- Navigation Bar ---------- */
+            .nav {
+                width: 100%;
+                max-width: 1200px;
+                margin: 0 auto 40px auto;
+                padding: 18px 24px;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+            }
+
+            .nav-logo {
+                font-size: 20px;
+                font-weight: 700;
+                text-decoration: none;
+                color: var(--pale);
+
+                img {
+                    width: 40px;
+                    height: 40px;
+                    margin-right: 12px;
+                    border-radius: 12px;
+                }
+            }
+
+            .nav-links {
+                list-style: none;
+                display: flex;
+                gap: 30px;
+                margin: 0;
+                padding: 0;
+            }
+
+            .nav-links a {
+                text-decoration: none;
+                font-weight: 600;
+                color: var(--text);
+                font-size: 16px;
+                position: relative;
+                padding-bottom: 2px;
+            }
+
+            /* Underline hover animation */
+            .nav-links a::after {
+                content: "";
+                position: absolute;
+                left: 0;
+                bottom: -4px;
+                width: 0%;
+                height: 2px;
+                background: var(--pale);
+                transition: width 0.2s ease-in-out;
+                
+            }
+
+            .nav-links a:hover::after {
+                width: 100%;
+                color: var(--pale);
+            }
+
+            /* Highlight current page link */
+            .nav-links a[aria-current="page"] {
+                color: var(--pale);
+            }
+        </style>
+        
+    <link rel="shortcut icon" type="image/x-icon" href="hookIcon.ico" />
+
+    </head>
+
+    <body>
+        <!-- ---------- Navigation ---------- -->
+        <header class="nav">
+            <a class="nav-logo" href="/">
+                <link rel="icon" type="image/png" href="{{ url_for('static', filename='logo.png') }}">
+                <img class="nav-logo" src="{{ url_for('static', filename='logo.png') }}" alt="Hooked logo" />
+                <span class="nav-title">Hooked</span>
+            </a>
+
+            <nav aria-label="Primary">
+                <ul class="nav-links">
+                <li><a href="/preferences">Preferences</a></li>
+                <li><a href="/page3">Books</a></li>
+                <li class="divider" aria-hidden="true"></li>
+                <li><a href="/logout">Logout</a></li>
+                </ul>
+            </nav>
+        </header>
+
+        <!-- ---------- Main Content ---------- -->
+        <div class="container">
+            <form class="card" action="/preferences" method="post">
+                <section class="card">
+                    <h1>Tell Us Your Preferences!</h1>
+
+                    <!-- Favorite Genres Section -->
+                    <div class="section">
+                        <h2>Favorite Genres</h2>
+                        <div class="genres">
+                            <!-- Genre pill checkboxes -->
+                            <label class="pill"><input type="checkbox" name="genre" value="Fiction"><span>Fiction</span></label>
+                            <label class="pill"><input type="checkbox" name="genre" value="Non-Fiction"><span>Non-Fiction</span></label>
+                            <label class="pill"><input type="checkbox" name="genre" value="Fantasy"><span>Fantasy</span></label>
+                            <label class="pill"><input type="checkbox" name="genre" value="Science Fiction"><span>Science Fiction</span></label>
+                            <label class="pill"><input type="checkbox" name="genre" value="Mystery"><span>Mystery</span></label>
+                            <label class="pill"><input type="checkbox" name="genre" value="Thriller"><span>Thriller</span></label>
+                            <label class="pill"><input type="checkbox" name="genre" value="Horror"><span>Horror</span></label>
+                            <label class="pill"><input type="checkbox" name="genre" value="Travel"><span>Travel</span></label>
+                            <label class="pill"><input type="checkbox" name="genre" value="History"><span>History</span></label>
+                            <label class="pill"><input type="checkbox" name="genre" value="Romance"><span>Romance</span></label>
+                            <label class="pill"><input type="checkbox" name="genre" value="Biography"><span>Biography</span></label>
+                            <label class="pill"><input type="checkbox" name="genre" value="Classics"><span>Classics</span></label>
+                            <label class="pill"><input type="checkbox" name="genre" value="Gothic"><span>Gothic</span></label>
+                            <label class="pill"><input type="checkbox" name="genre" value="Adventure"><span>Adventure</span></label>
+                            <label class="pill"><input type="checkbox" name="genre" value="Comedy"><span>Comedy</span></label>
+                            <label class="pill"><input type="checkbox" name="genre" value="Young Adult"><span>Young Adult</span></label>
+                            <label class="pill"><input type="checkbox" name="genre" value="Children's"><span>Children's</span></label>
+                            <label class="pill"><input type="checkbox" name="genre" value="Philosophy"><span>Philosophy</span></label>
+                        </div>
+                    </div>
+
+                    <!-- Top 3 Favorite Books Section -->
+                    <div class="section">
+                        <h2>Top 3 Favorite Books</h2>
+                        <div class="grid">
+                            <input type="text" name="book1" placeholder="1st Favorite Book" required>
+                            <input type="text" name="book2" placeholder="2nd Favorite Book" required>
+                            <input type="text" name="book3" placeholder="3rd Favorite Book" required>
+                        </div>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <div class="actions"><a href="/page3" class="btn">Submit</a></div>
+                </section>
+            </form>
+
+            <!-- ---------- Limit Checkbox Selection Script ---------- -->
+
+            <script>
+                const boxes = document.querySelectorAll('.genres input[type="checkbox"]');
+                function updateLimit() {
+                    const chosen = [...boxes].filter(b => b.checked).length;
+                    boxes.forEach(b => { if (!b.checked) b.disabled = (chosen >= 3); });
+                }
+                boxes.forEach(b => b.addEventListener('change', updateLimit));
+                updateLimit();
+            </script>
+        </div>
+    </body>
+</html>

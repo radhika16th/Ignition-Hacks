@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Hook</title>
+  <style>
+    /* Base */
+    :root {
+      --bg: #3D0037;
+      --fg: #500243;
+      --button-bg: #6A0D5F;
+      --button-hover: #8A157D;
+    }
+
+    * { box-sizing: border-box; }
+
+    /* Body */
+    body {
+      margin: 0;
+      font-family: Georgia, Times, "Times New Roman", serif;
+      background: var(--bg);
+      color: var(--fg);
+      line-height: 1.45;
+      perspective: 1500px;
+    }
+    
+    .wrapper {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: clamp(16px, 4vw, 40px);
+      position: relative;
+      cursor: pointer;
+    }
+
+    /* Card */
+    .card {
+      background: #F9F0F7;
+      border-radius: 16px;
+      box-shadow: 0 6px 20px rgba(0,0,0,.08);
+      overflow: hidden;
+      transition: transform 0.3s ease, opacity 0.4s ease;
+      transform-origin: bottom center;
+    }
+
+    .card.slide-left { transform: translateX(-200%) rotateZ(-15deg); opacity: 0; }
+    .card.slide-right { transform: translateX(200%) rotateZ(15deg); opacity: 0; }
+
+    /* Split */
+    .split {
+      display: flex;
+      align-items: stretch;
+      gap: 24px;
+      padding: clamp(16px, 2vw, 28px);
+    }
+
+    /* Left */
+    .left {
+      flex: 0 0 42%;  
+      max-width: 42%;
+    }
+
+    .left img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 12px;
+      display: block;
+      pointer-events: none;
+    }
+
+    /* Right */
+    .right {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 12px;
+      pointer-events: none;
+    }
+
+    /* Line Info */
+    .line-info {
+      font-size: clamp(16px, 2.2vw, 22px);
+      font-weight: bold;
+    }
+
+    .line-info .label {
+      font-weight: bold;
+      display: inline;
+    }
+
+    .line-info .info {
+      font-weight: normal;
+      display: inline;
+      margin-left: 4px;
+    }
+
+    /* Details Button */
+    .details-btn {
+      margin-top: 16px;
+      padding: 12px 24px;
+      background: var(--button-bg);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 18px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.2s ease;
+      pointer-events: auto;
+      align-self: flex-start;
+    }
+
+    /* Details Button */
+    .details-btn:hover {
+      background: var(--button-hover);
+    }
+
+    /* Nav */
+    .nav {
+        width: 100%;
+        max-width: 1200px;
+        margin: 0 auto 40px auto;
+        padding:18px 24px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .nav-logo {
+        font-size: 20px;
+        font-weight: 700;
+        text-decoration: none;
+        color: #F9F0F7;
+
+        img {
+            width: 40px;
+            height: 40px;
+            margin-right: 12px;
+            border-radius: 12px;
+        }
+    }
+
+    .nav-links {
+        list-style: none;
+        display: flex;
+        gap: 30px;
+        margin: 0;
+        padding: 0;
+    }
+
+    .nav-links a {
+        text-decoration: none;
+        font-weight: 600;
+        color: #F9F0F7;
+        font-size: 16px;
+        position: relative;
+        padding-bottom: 2px;
+    }
+
+    .nav-links a::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        bottom: -4px;
+        width: 0%;
+        height: 2px;
+        background: #F9F0F7;
+        transition: width 0.2s ease-in-out;
+        
+    }
+
+    .nav-links a:hover::after {
+        width: 100%;
+    }
+
+    .nav-links a[aria-current="page"] {
+        color: #F9F0F7;
+    }
+
+    /* Slide Buttons */
+    .slide-left-button, .slide-right-button {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 50%;
+      height: 100%;
+      background-color: transparent;
+      border: none;
+      z-index: 10;
+    }
+
+    .slide-left-button {
+      left: 0;
+      cursor: pointer;
+    }
+
+    .slide-right-button {
+      right: 0;
+      cursor: pointer;
+    }
+  </style>
+  <link rel="shortcut icon" type="image/x-icon" href="hookIcon.ico" />
+
+</head>
+<!-- nav bar and logo with icon -->
+<body>
+  <header class="nav">
+    <a class="nav-logo" href="/">
+        <link rel="icon" type="image/png" href="{{ url_for('static', filename='logo.png') }}">
+        <img class="nav-logo" src="{{ url_for('static', filename='logo.png') }}" alt="Hooked logo" />
+        <span class="nav-title">Hooked</span>
+    </a>
+
+    <nav aria-label="Primary">
+        <ul class="nav-links">
+        <li><a href="/preferences">Preferences</a></li>
+        <li><a href="/page3">Books</a></li>
+        <li class="divider" aria-hidden="true"></li>
+        <li><a href="/logout">Logout</a></li>
+        </ul>
+    </nav>
+  </header>
+<!-- Section on page that contains all book details-->
+  <main class="wrapper">
+    <section class="card">
+      <div class="split">
+        <figure class="left">
+          <img src="{{book.cover_image_url}}" alt="Descriptive alt text">
+        </figure>
+
+        <div class="right">
+          <div class="line-info"><span class="label">Title:</span><span class="info">{{book.book_title}}</span></div>
+          <div class="line-info"><span class="label">Author:</span><span class="info">{{book.author}}</span></div>
+          <div class="line-info"><span class="label">Genres:</span><span class="info">{{book.genres | join(", ")}}</span></div>
+          <div class="line-info"><span class="label">Publication Date:</span><span class="info">{{book.publication_info | join(", ")}}</span></div>
+          <div class="line-info"><span class="label">Average Rating:</span><span class="info">{{book.average_rating}}</span></div>
+          <!-- Button to view plot summary -->
+          <form action="/page4" method ="post">
+            <input type="hidden" name="book_id" value="{{book.book_id}}">
+            <button class="details-btn">Details</button>
+          </form>
+          <!-- Invisible button that tracks liked books and sends info to backend -->
+          <form action = "/page3" method = "post">
+            <input type="hidden" name="choice" value="{{book.book_title}}">
+            <input type="hidden" name="choice2" value="{{book.author}}">
+            <button class="slide-right-button"></button>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const wrapper = document.querySelector('.wrapper');
+    let currentCard = document.querySelector('.card');
+
+    function createNewCard() {
+      // Clone the current card
+      const newCard = currentCard.cloneNode(true);
+      
+      // Remove any animation classes
+      newCard.classList.remove('slide-left', 'slide-right');
+      
+      // Reset transform styles
+      newCard.style.transform = '';
+      
+      // Insert the new card before the current one (so it's underneath)
+      wrapper.insertBefore(newCard, currentCard);
+      
+      // Remove the old card
+      currentCard.remove();
+      
+      // Update currentCard reference to the new one
+      currentCard = newCard;
+      
+      // Set up event listeners for the new card
+      setupCardListeners();
+    }
+
+    function setupCardListeners() {
+      wrapper.addEventListener('mousemove', handleMouseMove);
+      wrapper.addEventListener('mouseleave', handleMouseLeave);
+      wrapper.addEventListener('click', handleClick);
+      
+      // Add click listener for the details button
+      const detailsBtn = currentCard.querySelector('.details-btn');
+      if (detailsBtn) {
+        detailsBtn.addEventListener('click', handleDetailsClick);
+      }
+    }
+    // Rotates info box based on mouse movement
+    function handleMouseMove(e) {
+      const rect = wrapper.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const third = rect.width / 3;
+
+      if (x < third) {
+        currentCard.style.transform = `rotateZ(-8deg) translateY(-5px)`;
+      } else if (x > 2 * third) {
+        currentCard.style.transform = `rotateZ(8deg) translateY(-5px)`;
+      } else {
+        currentCard.style.transform = `rotateZ(0deg) translateY(0)`;
+      }
+    }
+
+    function handleMouseLeave() {
+      currentCard.style.transform = `rotateZ(0deg) translateY(0)`;
+    }
+
+    function handleClick(e) {
+      // Don't trigger if clicking on the details button
+      if (e.target.classList.contains('details-btn')) {
+        return;
+      }
+      
+      const rect = wrapper.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const third = rect.width / 3;
+      
+      // Remove event listeners temporarily to prevent multiple clicks during animation
+      wrapper.removeEventListener('mousemove', handleMouseMove);
+      wrapper.removeEventListener('mouseleave', handleMouseLeave);
+      wrapper.removeEventListener('click', handleClick);
+      // Right swipe to save book info and left just shows a new one
+      if (x < third) {
+        currentCard.classList.add('slide-left');
+        window.location.reload()
+      } else if (x > 2 * third) {
+        currentCard.classList.add('slide-right');
+        document.querySelector('form[action="/page3"]').submit();
+      }
+      
+      // After animation completes, create a new card
+      setTimeout(createNewCard, 400);
+    }
+
+    // Initial setup
+    setupCardListeners();
+  </script>
+</body>
+</html>

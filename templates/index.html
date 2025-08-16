@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <title>Main</title>
+    <style>
+        /* ---------- Root color variables ---------- */
+        :root{
+            --bg:#3D0037;
+            --card:#500243;
+            --pale:#FFEBFD;
+            --text:#fff;
+            --hover-purple:#4b0239;
+        }
+
+        /* ---------- Base page styles ---------- */
+        body{
+            margin:0;
+            font-family: "Times New Roman", Times, serif;
+            background: var(--bg);
+            color:var(--text);
+            display:block;
+            place-items:center;
+            padding: 24px;
+        }
+
+        /* ---------- Navigation bar container ---------- */
+        .nav {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto 40px auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        /* ---------- Logo styles ---------- */
+        .nav-logo {
+            font-size: 20px;
+            font-weight: 700;
+            text-decoration: none;
+            color: var(--pale);
+
+            img {
+                width: 40px;
+                height: 40px;
+                margin-right: 12px;
+                border-radius: 12px;
+            }
+        }
+
+        /* ---------- Navigation links container ---------- */
+        .nav-links {
+            list-style: none;
+            display: flex;
+            gap: 30px;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* ---------- Individual nav links ---------- */
+        .nav-links a {
+            text-decoration: none;
+            font-weight: 600;
+            color: var(--text);
+            font-size: 16px;
+            position: relative;
+            padding-bottom: 2px;
+        }
+
+        /* ---------- Underline animation effect ---------- */
+        .nav-links a::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            bottom: -4px;
+            width: 0%;
+            height: 2px;
+            background: var(--pale);
+            transition: width 0.2s ease-in-out;
+            
+        }
+
+        /* Expand underline on hover */
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* Highlight the active page link */
+        .nav-links a[aria-current="page"] {
+            color: var(--pale);
+        }
+
+        /* ---------- Card container for table ---------- */
+        .card {
+            background: var(--pale);
+            color: var(--card);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            width: 80%;
+            margin: 0 auto;    
+            border-radius: 12px;      
+        }
+
+        /* ---------- Table styles ---------- */
+        .book-table {
+            width: 100%; 
+            border-collapse: collapse;
+        }
+
+        /* Table header row */
+        .book-table thead th {
+            background: var(--hover-purple);
+            color: var(--pale);
+            text-align: left;
+            padding: 14px 18px;
+        }
+
+        /* Table cells */
+        .book-table td {
+            padding: 14px 18px;
+            border-top: 1px solid rgba(0,0,0,0.05);
+            vertical-align: middle;
+            }
+
+        /* Row hover effect */
+        .book-table tr:hover {
+            background: #e9c3e5;
+            color: #4b0239;
+        }
+
+        /* ---------- Table column widths ---------- */
+        .col-num {
+            width: 80px;
+            text-align: right;
+            padding-right: 24px;
+        }
+
+        .col-title {
+            width: auto;
+        }
+
+        /* ---------- Empty state container ---------- */
+        .empty-wrap{
+            display:flex;
+            justify-content:center;
+            margin-top:60px;
+        }
+
+        /* ---------- Empty state call-to-action ---------- */
+        .empty-cta {
+            display: inline-block;
+            padding: 20px 32px;
+            margin: 60px auto;
+            background: var(--pale);
+            color: var(--card);
+            font-size: 1.3rem;
+            font-weight: 600;
+            border-radius: 20px;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+            text-align: center;
+            animation: bob 2s infinite ease-in-out;
+        }
+
+        /* Add fishing emoji before text */
+        .empty-cta::before {
+            content: "🎣 ";
+            font-size: 1.5rem;
+        }
+
+        /* ---------- Floating animation for empty CTA ---------- */
+        @keyframes bob {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-4px); }
+        }
+    </style>
+
+    <!-- Page favicon -->
+    <link rel="icon" type="image/png" href="logo.png">
+</head>
+
+<body>
+    <br>
+
+    <!-- Navigation bar -->
+    <header class="nav">
+        <a class="nav-logo" href="/">
+            <!-- Logo image -->
+            <link rel="icon" type="image/png" href="{{ url_for('static', filename='logo.png') }}">
+            <img class="nav-logo" src="{{ url_for('static', filename='logo.png') }}" alt="Hooked logo" />
+            <span class="nav-title">Hooked</span>
+        </a>
+
+        <!-- Navigation links -->
+        <nav aria-label="Primary">
+            <ul class="nav-links">
+            <li><a href="/preferences">Preferences</a></li>
+            <li><a href="/page3">Books</a></li>
+            <li class="divider" aria-hidden="true"></li>
+            <li><a href="/logout">Logout</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Content section -->
+    {% if titles and titles|length %}
+      <!-- If there are book titles, display them in a table -->
+      <section class="card">
+        <table class="book-table">
+          <thead>
+            <tr>
+              <th class="col-num">#</th>
+              <th class="col-title">Title</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for t in titles %}
+              <tr>
+                <td class="col-num">{{ loop.index }}</td>
+                <td class="col-title">{{ t }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </section>
+    {% else %}
+    <!-- If there are no titles, show a call-to-action -->
+      <div class="empty-wrap">
+        <div class="empty-cta"><a href="/preferences">Start fishing!</a></div>
+      </div>
+    {% endif %}
+  </div>
+
+</body>
+</html>

@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+
+<html lang="en">
+    <head>
+         <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Hooked</title>
+        <link rel="shortcut icon" type="image/x-icon" href="hookIcon.ico" />
+        <style>
+            /* Base */
+            * { 
+                box-sizing: border-box; 
+            }
+
+            html, body {
+                height: 100%;
+            }
+
+            /* Theme Variables */
+            :root{
+                --bg:#3D0037;
+                --card:#500243;
+                --pale:#FFEBFD;
+                --text:#fff;
+                --hover-purple:#4b0239;
+            }
+
+            /* Body */
+            body{
+                margin:0;
+                font-family: "Times New Roman", Times, serif;
+                background: var(--bg);
+                color:var(--text);
+                display:block;
+                place-items:center;
+                padding: 24px;
+            }
+
+            /* Form Card */
+            form{
+                width: 100%;
+                max-width: 420px;
+                background: var(--card);
+                padding: 34px;
+                border-radius: 20px;
+                display:flex;
+                flex-direction:column;
+                gap: 20px;
+                position: relative;
+                overflow: visible;
+            }
+
+            /* Inputs */
+            input{
+                appearance: none;
+                width: 100%;
+                border: 1px solid transparent;
+                background: var(--input);
+                color: var(--text);
+                padding: 14px 14px;
+                border-radius: 12px;
+                font-size: 20px;
+                transition: .15s ease, box-shadow .15s ease, background-color .2s ease, transform .04s ease;
+            }
+
+            input::placeholder{ 
+                color: var(--text); 
+            }
+
+            input[name="password"] {
+                letter-spacing: .3px; 
+            }
+
+            input:hover{
+                border-color: var(--pale);
+            }
+
+            input:invalid:focus{
+                border-color: var(--pale);
+                box-shadow: 0 0 0 4px var(--card);
+            }
+
+            /* Button */
+            button{
+                border: 0;
+                cursor: pointer;
+                padding: 12px 16px;
+                font-size: 15px;
+                font-weight: 600;
+                border-radius: 12px;
+                color: white;
+                background-color: radial-gradient(var(--card), var(--bg));
+                box-shadow: 0 5px 15px var(--pale);
+                transition: transform .06s ease, box-shadow .15s ease, filter .2s ease;
+            }
+
+            button:hover{
+                transform: translateY(-1px);
+                box-shadow: 0 5px 15px rgb(188, 145, 184);
+                filter: saturate(1.05);
+            }
+
+            /* Navigation */
+            .nav {
+                width: 100%;
+                max-width: 1200px;
+                margin: 0 auto 40px auto;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+            }
+
+            .nav-logo {
+                font-size: 20px;
+                font-weight: 700;
+                text-decoration: none;
+                color: var(--pale);
+
+                img {
+                    width: 40px;
+                    height: 40px;
+                    margin-right: 12px;
+                    border-radius: 12px;
+                }
+            }
+
+            .nav-links {
+                list-style: none;
+                display: flex;
+                gap: 30px;
+                margin: 0;
+                padding: 0;
+            }
+
+            .nav-links a {
+                text-decoration: none;
+                font-weight: 600;
+                color: var(--text);
+                font-size: 16px;
+                position: relative;
+                padding-bottom: 2px;
+            }
+
+            .nav-links a::after {
+                content: "";
+                position: absolute;
+                left: 0;
+                bottom: -4px;
+                width: 0%;
+                height: 2px;
+                background: var(--pale);
+                transition: width 0.2s ease-in-out;
+                
+            }
+
+            .nav-links a:hover::after {
+                width: 100%;
+            }
+
+            .nav-links a[aria-current="page"] {
+                color: var(--pale);
+            }
+        </style>
+    <link rel="shortcut icon" type="image/x-icon" href="hookIcon.ico" />
+
+    </head>
+    <!-- nav bar and logo with icon -->
+    <header class="nav">
+        <a class="nav-logo" href="/">
+            <link rel="icon" type="image/png" href="{{ url_for('static', filename='logo.png') }}">
+            <img class="nav-logo" src="{{ url_for('static', filename='logo.png') }}" alt="Hooked logo" />
+            <span class="nav-title">Hooked</span>
+        </a>
+
+        <nav aria-label="Primary">
+            <ul class="nav-links">
+            <li><a href="/login" aria-current="page">Login</a></li>
+            <li><a href="/register">Register</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <br> <br> <br> <br> <br> <br> <br> <br> 
+<!--Register Form-->
+    <body>
+        <form action="/register" method="post">
+            <input autocomplete="off" name="username" placeholder="Username" required type="text">
+            <input name="password" placeholder="Password" required type="password">
+            <input name="confirmpassword" placeholder="Confirm Password" required type="password">
+            <button type="submit">Register</button>
+        </form>
+    </body>
+</html>
